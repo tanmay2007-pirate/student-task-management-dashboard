@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyFlow - Student Task & Assignment Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body data-theme="light">
+  <div class="app-layout">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M12 6v6"></path>
+            <path d="M9 9h6"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>StudyFlow</h2>
+          <span>Student Task Hub</span>
+        </div>
+      </div>
+
+      <!-- Student Profile Card in Sidebar -->
+      <div class="student-card" id="studentCardBtn" title="Click to edit profile">
+        <div class="student-avatar" id="sidebarAvatar">JS</div>
+        <div class="student-info">
+          <h4 id="sidebarStudentName">Alex Johnson</h4>
+          <p id="sidebarStudentCourse">B.Tech - Computer Science</p>
+          <span class="student-id-badge" id="sidebarStudentId">ID: CS-2024-89</span>
+        </div>
+        <button class="edit-profile-icon" title="Edit Profile" aria-label="Edit Profile">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-menu">
+        <p class="nav-section-label">VIEWS</p>
+        <button class="nav-item active" data-view="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard & List</span>
+        </button>
+        <button class="nav-item" data-view="kanban">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="5" height="18" rx="1"></rect>
+            <rect x="10" y="3" width="5" height="18" rx="1"></rect>
+            <rect x="17" y="3" width="5" height="18" rx="1"></rect>
+          </svg>
+          <span>Kanban Board</span>
+        </button>
+        <button class="nav-item" data-view="pomodoro">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Pomodoro Timer</span>
+        </button>
+
+        <p class="nav-section-label" style="margin-top: 1.5rem;">SUBJECTS</p>
+        <div class="subject-quick-list" id="sidebarSubjectList">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer Tools -->
+      <div class="sidebar-footer">
+        <button class="btn-theme-toggle" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+          <span class="theme-icon-container">
+            <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+          <span id="themeLabel">Dark Mode</span>
+        </button>
+
+        <div class="sidebar-actions">
+          <button class="btn-sidebar-tool" id="exportDataBtn" title="Backup tasks as JSON file">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Backup
+          </button>
+          <label class="btn-sidebar-tool" for="importFileInput" title="Restore tasks from JSON file">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Restore
+          </label>
+          <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <!-- Top Header / Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Navigation">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div>
+            <h1 class="header-title" id="pageTitle">Dashboard</h1>
+            <p class="header-subtitle" id="currentDateStr">Today is Thursday, Oct 29</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-primary" id="openAddTaskModalBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add New Task</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW 1: DASHBOARD & LIST VIEW -->
+      <section class="view-container active-view" id="dashboardView">
+        <!-- Quick Stats Overview Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon icon-total">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Total Tasks</span>
+              <h3 class="stat-value" id="statTotalCount">0</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-pending">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">In Progress / Pending</span>
+              <h3 class="stat-value" id="statPendingCount">0</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-completed">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Completed</span>
+              <h3 class="stat-value" id="statCompletedCount">0</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-overdue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Overdue</span>
+              <h3 class="stat-value" id="statOverdueCount">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Progress Bar -->
+        <div class="progress-banner">
+          <div class="progress-info">
+            <div class="progress-text-group">
+              <span class="progress-title">Academic Task Completion Rate</span>
+              <span class="progress-percentage" id="completionRateText">0%</span>
+            </div>
+            <p class="progress-desc" id="progressMotivationalText">Keep up the steady progress on your coursework!</p>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="completionProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Task Controls: Search, Filters, Sorting -->
+        <div class="filter-controls-card">
+          <div class="search-input-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search tasks by title, subject, or notes..." autocomplete="off">
+            <button class="clear-search-btn" id="clearSearchBtn" title="Clear search" style="display: none;">✕</button>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="filterSubject">Subject:</label>
+              <select id="filterSubject" class="form-select">
+                <option value="ALL">All Subjects</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filterPriority">Priority:</label>
+              <select id="filterPriority" class="form-select">
+                <option value="ALL">All Priorities</option>
+                <option value="Urgent">🔥 Urgent</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filterStatus">Status:</label>
+              <select id="filterStatus" class="form-select">
+                <option value="ALL">All Status</option>
+                <option value="todo">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="overdue">Overdue Only</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="sortBy">Sort By:</label>
+              <select id="sortBy" class="form-select">
+                <option value="dueDateAsc">Due Date (Earliest First)</option>
+                <option value="dueDateDesc">Due Date (Latest First)</option>
+                <option value="priority">Priority (High to Low)</option>
+                <option value="title">Title (A - Z)</option>
+                <option value="created">Recently Added</option>
+              </select>
+            </div>
+
+            <button class="btn btn-outline" id="resetFiltersBtn" title="Reset all filters">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Task List Header & Bulk Actions -->
+        <div class="task-list-header">
+          <div class="list-title-wrap">
+            <h2 id="taskCountHeader">All Tasks (0)</h2>
+            <span class="active-filter-indicator" id="filterSummaryText"></span>
+          </div>
+
+          <div class="bulk-actions">
+            <button class="btn-link text-danger" id="clearCompletedBtn" title="Remove all completed tasks">
+              Clear Completed
+            </button>
+          </div>
+        </div>
+
+        <!-- Tasks Container -->
+        <div class="task-list-container" id="taskListContainer">
+          <!-- Rendered via JavaScript -->
+        </div>
+
+        <!-- Empty State message -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon">📝</div>
+          <h3>No Tasks Found</h3>
+          <p id="emptyStateDesc">You don't have any tasks matching your criteria. Add one below!</p>
+          <button class="btn btn-primary" id="emptyStateAddBtn">+ Create Your First Task</button>
+        </div>
+      </section>
+
+      <!-- VIEW 2: KANBAN BOARD VIEW -->
+      <section class="view-container" id="kanbanView">
+        <div class="kanban-info-bar">
+          <p>Drag tasks between columns or click status arrows to advance student workflow.</p>
+        </div>
+
+        <div class="kanban-board">
+          <!-- To Do Column -->
+          <div class="kanban-column" data-status="todo" id="colTodo">
+            <div class="kanban-column-header col-todo-header">
+              <div class="col-title-group">
+                <span class="col-indicator indicator-todo"></span>
+                <h3>To Do</h3>
+              </div>
+              <span class="col-count" id="countColTodo">0</span>
+            </div>
+            <div class="kanban-dropzone" id="dropzoneTodo">
+              <!-- Task cards rendered here -->
+            </div>
+          </div>
+
+          <!-- In Progress Column -->
+          <div class="kanban-column" data-status="in-progress" id="colInProgress">
+            <div class="kanban-column-header col-inprogress-header">
+              <div class="col-title-group">
+                <span class="col-indicator indicator-inprogress"></span>
+                <h3>In Progress</h3>
+              </div>
+              <span class="col-count" id="countColInProgress">0</span>
+            </div>
+            <div class="kanban-dropzone" id="dropzoneInProgress">
+              <!-- Task cards rendered here -->
+            </div>
+          </div>
+
+          <!-- Completed Column -->
+          <div class="kanban-column" data-status="completed" id="colCompleted">
+            <div class="kanban-column-header col-completed-header">
+              <div class="col-title-group">
+                <span class="col-indicator indicator-completed"></span>
+                <h3>Completed</h3>
+              </div>
+              <span class="col-count" id="countColCompleted">0</span>
+            </div>
+            <div class="kanban-dropzone" id="dropzoneCompleted">
+              <!-- Task cards rendered here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: POMODORO STUDY TIMER -->
+      <section class="view-container" id="pomodoroView">
+        <div class="pomodoro-wrapper">
+          <div class="pomodoro-card">
+            <div class="timer-modes">
+              <button class="timer-mode-btn active" data-time="25" data-mode="study">Study Focus (25m)</button>
+              <button class="timer-mode-btn" data-time="5" data-mode="short-break">Short Break (5m)</button>
+              <button class="timer-mode-btn" data-time="15" data-mode="long-break">Long Break (15m)</button>
+            </div>
+
+            <div class="timer-display-box">
+              <div class="timer-circle">
+                <svg class="timer-svg" viewBox="0 0 200 200">
+                  <circle class="timer-bg-circle" cx="100" cy="100" r="90"></circle>
+                  <circle class="timer-progress-circle" id="timerProgressRing" cx="100" cy="100" r="90"></circle>
+                </svg>
+                <div class="timer-digits" id="timerDisplay">25:00</div>
+                <span class="timer-status-text" id="timerStatusText">Ready to Study</span>
+              </div>
+            </div>
+
+            <div class="timer-task-selector">
+              <label for="pomodoroTaskSelect">Focusing On Task:</label>
+              <select id="pomodoroTaskSelect" class="form-select">
+                <option value="">General Study Session</option>
+              </select>
+            </div>
+
+            <div class="timer-controls">
+              <button class="btn btn-timer-primary" id="timerToggleBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span id="timerToggleText">Start Session</span>
+              </button>
+              <button class="btn btn-outline" id="timerResetBtn" title="Reset Timer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 4v6h-6"></path>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                Reset
+              </button>
+            </div>
+
+            <div class="pomodoro-stats-strip">
+              <div class="pomo-stat-item">
+                <span class="pomo-stat-val" id="pomoSessionsCount">0</span>
+                <span class="pomo-stat-lbl">Sessions Completed</span>
+              </div>
+              <div class="pomo-stat-item">
+                <span class="pomo-stat-val" id="pomoTotalMinutes">0m</span>
+                <span class="pomo-stat-lbl">Focused Study Time</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="study-tips-card">
+            <h3>🎓 Smart Study Tips</h3>
+            <ul class="tips-list">
+              <li><strong>The 25/5 Rule:</strong> Concentrate deeply for 25 minutes without notifications, then relax your mind for 5 minutes.</li>
+              <li><strong>Prioritize Urgency:</strong> Complete red Urgent tasks before moving on to larger long-term assignments.</li>
+              <li><strong>Chunk Big Projects:</strong> Break massive semester projects into small 1-hour milestones in your task list.</li>
+              <li><strong>Hydrate & Move:</strong> Stand up, stretch, and drink water during your 5-minute break.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT TASK -->
+  <div class="modal-backdrop" id="taskModalBackdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add New Task</h3>
+        <button class="modal-close-btn" id="closeTaskModalBtn" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="taskForm" novalidate>
+        <input type="hidden" id="taskId">
+
+        <div class="form-group">
+          <label for="taskTitle">Task Title <span class="required-star">*</span></label>
+          <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Implement Binary Search Tree, Read Chapter 4..." required>
+          <span class="form-error" id="taskTitleError">Please enter a task title.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="taskSubject">Subject / Course <span class="required-star">*</span></label>
+            <input type="text" id="taskSubject" class="form-input" list="subjectDatalist" placeholder="e.g. Computer Science, Math, Physics" required>
+            <datalist id="subjectDatalist">
+              <option value="Computer Science">
+              <option value="Mathematics">
+              <option value="Physics">
+              <option value="Database Systems">
+              <option value="Web Development">
+              <option value="Software Engineering">
+              <option value="English & Communication">
+            </datalist>
+            <span class="form-error" id="taskSubjectError">Please specify a subject.</span>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="taskCategory">Task Category</label>
+            <select id="taskCategory" class="form-select">
+              <option value="Assignment">Assignment</option>
+              <option value="Exam Prep">Exam Preparation</option>
+              <option value="Lab Work">Lab Work / Report</option>
+              <option value="Project">Project / Term Paper</option>
+              <option value="Reading">Reading / Research</option>
+              <option value="Homework">Daily Homework</option>
+              <option value="Other">General Task</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="taskPriority">Priority Level</label>
+            <select id="taskPriority" class="form-select">
+              <option value="Urgent">🔥 Urgent (Due soon / Exam)</option>
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="taskStatusSelect">Current Status</label>
+            <select id="taskStatusSelect" class="form-select">
+              <option value="todo">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="taskDueDate">Due Date <span class="required-star">*</span></label>
+            <input type="date" id="taskDueDate" class="form-input" required>
+            <span class="form-error" id="taskDueDateError">Please select a due date.</span>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="taskEstHours">Estimated Study Time (hrs)</label>
+            <input type="number" id="taskEstHours" class="form-input" min="0.5" max="50" step="0.5" placeholder="e.g. 2.5">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taskNotes">Notes & Instructions (Optional)</label>
+          <textarea id="taskNotes" class="form-textarea" rows="3" placeholder="Add professor guidelines, reference links, textbook pages..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelTaskModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveTaskBtn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT STUDENT PROFILE -->
+  <div class="modal-backdrop" id="profileModalBackdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Student Information</h3>
+        <button class="modal-close-btn" id="closeProfileModalBtn" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="profileName">Student Full Name</label>
+          <input type="text" id="profileName" class="form-input" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="profileId">Student Roll / ID Number</label>
+            <input type="text" id="profileId" class="form-input" placeholder="e.g. CS-2024-89" required>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="profileSemester">Semester / Year</label>
+            <input type="text" id="profileSemester" class="form-input" placeholder="e.g. 3rd Semester / Year 2">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profileCourse">Major / Course of Study</label>
+          <input type="text" id="profileCourse" class="form-input" placeholder="e.g. B.Tech Computer Science, B.Sc Mathematics" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelProfileModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script src="app.js"></script>
+</body>
+</html>
